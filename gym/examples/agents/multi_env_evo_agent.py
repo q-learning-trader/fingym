@@ -54,6 +54,8 @@ envs.append(abbvEnv)
 aaplEnv = gym.make('AAPL-Daily-v0')
 envs.append(aaplEnv)
 
+top_limit = 20
+
 class EvoAgent():
     def __init__(self, env_state_dim, time_frame):
         self.state_size = env_state_dim
@@ -219,10 +221,12 @@ def add_elite(envs, agents, sorted_parent_indexes, elite_index = None, only_cons
 
     top_score = None
     top_elite_index = None
-    
+    j=0
     for i in candidate_elite_index:
         score = return_average_score(envs, agents[i],runs=5)
+        agents[candidate_elite_index].save_model_weights(os.path.join(dirname,'evo'+j+'_weights.h5'))
         print("Score for elite i ", i, " is ", score)
+        j+=1
         
         if(top_score is None):
             top_score = score
@@ -264,16 +268,15 @@ if __name__ == '__main__':
 
     agents = create_random_agents(num_agents, state_size, time_frame)
 
-    # first agent gets saved weights
-    dirname = os.path.dirname(__file__)
-    os.path.join(dirname,'evo_weights.h5')
-    weights_file=os.path.join(dirname,'evo_weights.h5')
-    if os.path.exists(weights_file):
-        print('loading existing weights')
-        agents[0].model.load_weights(weights_file)
+    for i in range(top_limit):
+        # first agents gets saved weights
+        dirname = os.path.dirname(__file__)
+        weights_file=os.path.join(dirname,'evo'+i+'_weights.h5')
+        if os.path.exists(weights_file):
+            print('loading existing weights')
+            agents[i].model.load_weights(weights_file)
 
     # how many top agents to consider as parents
-    top_limit = 20
 
     # run evolution until x generations
     generations = 1000
