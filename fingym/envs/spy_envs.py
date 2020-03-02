@@ -19,11 +19,17 @@ import sys
 from datetime import datetime
 import re
 
-from .env import Env
-from gym.spaces.space import BuyHoldSellSpace
+import gym
+from gym import spaces
 
-class SpyEnv(Env):
+class SpyEnv(gym.Env):
+
+    """
+    A stock trading environment
+    """
+
     def __init__(self):
+        super(SpyEnv, self).__init__()
 
         self.headers, self.data = self._load_data()
         self.n_step = len(self.data)
@@ -44,7 +50,11 @@ class SpyEnv(Env):
         # action[1]
         # Number of actions to buy/sell
         self.action_size = 2
-        self.action_space = BuyHoldSellSpace()
+        self.action_space = spaces.Box(
+            low=np.array([0,0], high=np.array([3,100], dtype=np.float32))
+        )
+
+        
     
     def reset(self):
         self.cur_step = 0

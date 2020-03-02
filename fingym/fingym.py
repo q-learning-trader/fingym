@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 import re
 import sys
 import os
-from .envs.spy_envs import DailySpyEnv, IntradaySpyEnv
+from fingym.envs.spy_envs import DailySpyEnv, IntradaySpyEnv
 from .envs.tsla_envs import TslaDailyEnv
 from .envs.googl_envs import GooglDailyEnv
 from .envs.cgc_envs import CgcDailyEnv
